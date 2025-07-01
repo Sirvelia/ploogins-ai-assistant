@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "outDir": "./dist/",
+        "jsx": "react",
+        "module": "ESNext",
+        "target": "ES2015",
+        "strict": true,
+        "allowSyntheticDefaultImports": true,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "lib": ["DOM", "DOM.Iterable", "ESNext"],
+        "skipLibCheck": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["resources/scripts/src/*"]
+        },
+        "typeRoots": [
+            "./node_modules/@types",
+            "./resources/scripts/src/types"
+        ]
+    },
+    "include": [
+        "resources/scripts/src/**/*"
+    ]
+}

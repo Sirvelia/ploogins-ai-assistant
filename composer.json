@@ -1,0 +1,34 @@
+{
+	"authors": [
+		{
+			"email": "joan@sirvelia.com",
+			"homepage": "https://sirvelia.com",
+			"name": "Joan Rodas Cusidó",
+			"role": "Developer"
+		}
+	],
+	"autoload": {
+		"files": [
+			"Utils/utils.php"
+		],
+		"psr-4": {
+			"PlooginsPlugin\\": ""
+		}
+	},
+	"description": "An amazing plugin made with PLUBO",
+	"homepage": "https://github.com/joanrodas/plubo",
+	"keywords": [
+		"plugin",
+		"wordpress",
+		"boilerplate",
+		"wp"
+	],
+	"license": "GPL-3.0+",
+	"name": "amadeuarderiu/ploogins",
+	"require": {
+		"eftec/bladeone": "4.18",
+		"php": "\u003e=7.4",
+		"joanrodas/plubo-routes": "^0.7.5"
+	},
+	"type": "wordpress-plugin"
+}

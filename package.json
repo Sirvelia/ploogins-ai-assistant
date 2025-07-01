@@ -1,0 +1,61 @@
+{
+	"author": "Joan Rodas <joan@sirvelia.com>",
+	"bugs": {
+		"url": "https://github.com/joanrodas/plubo/issues"
+	},
+	"devDependencies": {
+		"@types/wordpress__url": "^2.14.0",
+		"@wordpress/scripts": "latest",
+		"clean-webpack-plugin": "^4.0.0",
+		"copy-webpack-plugin": "^11.0.0",
+		"css-loader": "6.8.1",
+		"mini-css-extract-plugin": "2.7.6",
+		"postcss": "8.4.31",
+		"postcss-loader": "7.3.3",
+		"postcss-preset-env": "9.3.0",
+		"sass": "1.69.5",
+		"sass-loader": "13.3.2",
+		"ts-loader": "latest",
+		"typescript": "latest",
+		"webpack": "^5.89.0",
+		"webpack-cli": "^5.1.4",
+		"webpack-manifest-plugin": "^5.0.0"
+	},
+	"engines": {
+		"node": ">=16.0.0"
+	},
+	"homepage": "https://plubo.dev",
+	"licenses": [
+		{
+			"type": "GPL-3.0+",
+			"url": "https://www.gnu.org/licenses/gpl-3.0"
+		}
+	],
+	"name": "@amadeuarderiu/ploogins",
+	"private": true,
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/joanrodas/plubo.git"
+	},
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"translate": "yarn translate:pot && yarn translate:js",
+		"translate:js": "wp i18n make-json ./languages --pretty-print",
+		"translate:pot": "wp i18n make-pot . ./languages/plugin-placeholder.pot --ignore-domain --include=\"react,resources\""
+	},
+	"version": "0.4.5",
+	"volta": {
+		"node": "22.16.0",
+		"yarn": "1.22.22"
+	},
+	"dependencies": {
+		"@wordpress/api-fetch": "^7.25.0",
+		"@wordpress/components": "^29.11.0",
+		"@wordpress/dom-ready": "^4.25.0",
+		"@wordpress/html-entities": "^4.25.0",
+		"@wordpress/i18n": "^5.25.0",
+		"@wordpress/icons": "^10.25.0",
+		"@wordpress/url": "^4.25.0"
+	}
+}
