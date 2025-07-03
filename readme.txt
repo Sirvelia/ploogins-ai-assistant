@@ -1,5 +1,5 @@
 === Ploogins - AI Assistant ===
-Contributors: sirvelia
+Contributors: sirvelia,amadeuarderiu,joanrodas,alberttarress,acirujano
 Donate link: https://ploogins.com/
 Tags: ai, assistant, plugins, ploogins
 Requires at least: 6.8
