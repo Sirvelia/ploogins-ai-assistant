@@ -8,6 +8,7 @@
         "allowSyntheticDefaultImports": true,
         "moduleResolution": "node",
         "esModuleInterop": true,
+        "resolveJsonModule": true,
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "skipLibCheck": true,
         "baseUrl": ".",

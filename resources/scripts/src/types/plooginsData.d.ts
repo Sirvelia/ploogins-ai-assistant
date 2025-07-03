@@ -3,6 +3,8 @@ export type PlooginsData = {
     ploogins_public_api_url: string;
     nonce: string;
     ploogins_public_api_url: string;
+    wp_rest_url: string;
+    locale: string;
 };
 
 declare const plooginsData: PlooginsData;

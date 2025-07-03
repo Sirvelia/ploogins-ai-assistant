@@ -1,6 +1,6 @@
 <?php
 
-namespace PlooginsPlugin\Includes;
+namespace Ploogins\Includes;
 
 class Loader
 {
@@ -13,7 +13,7 @@ class Loader
     {
         //FUNCTIONALITY CLASSES
         foreach (glob(PLOOGINSPLUGIN_PATH . 'Functionality/*.php') as $filename) {
-            $class_name = '\\PlooginsPlugin\Functionality\\' . basename($filename, '.php');
+            $class_name = '\\Ploogins\Functionality\\' . basename($filename, '.php');
             if (class_exists($class_name)) {
                 try {
                     new $class_name(PLOOGINSPLUGIN_NAME, PLOOGINSPLUGIN_VERSION);
@@ -27,7 +27,7 @@ class Loader
         //ADMIN FUNCTIONALITY
         if( is_admin() ) {
             foreach (glob(PLOOGINSPLUGIN_PATH . 'Functionality/Admin/*.php') as $filename) {
-                $class_name = '\\PlooginsPlugin\Functionality\Admin\\' . basename($filename, '.php');
+                $class_name = '\\Ploogins\Functionality\Admin\\' . basename($filename, '.php');
                 if (class_exists($class_name)) {
                     try {
                         new $class_name(PLOOGINSPLUGIN_NAME, PLOOGINSPLUGIN_VERSION);

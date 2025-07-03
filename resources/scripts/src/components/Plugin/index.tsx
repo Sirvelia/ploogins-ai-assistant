@@ -1,46 +1,26 @@
 import { __ } from '@wordpress/i18n';
 import { decodeEntities } from '@wordpress/html-entities';
-import { Button } from '@wordpress/components';
-import React, { useEffect, useState, useMemo, use } from 'react';
+import { Button, Flex, FlexItem } from '@wordpress/components';
+import React, { useState, useMemo } from 'react';
 import './style.css';
 import Plugin from '@/types/Plugin';
-import { useManagePlugins } from '@/hooks/useManagePlugins';
-import { useActivateUrl } from '@/hooks/useActivateUrl';
-
+import { useMutation, useQuery } from '@tanstack/react-query';
+import getSitePluginsQueryOptions from '@/queryOptions/getSitePluginsQueryOptions';
+import getPluginActivateUrlQueryOptions from '@/queryOptions/getPluginActivateUrlQueryOptions';
+import { formatNumber, formatDateAgo } from '@/utils/formatting';
+import { installPluginMutationOptions } from '@/mutationOptions/installPluginMutationOptions';
+import PluginModal from '@/components/PluginModal';
+import RatingStars from '../ui/RatingStars';
 interface PluginCardProps {
     plugin: Plugin;
-    installedPlugins: Plugin[];
-    fetchPlugins: () => void;
-    activePlugins: any[];
 }
 
-const Plugin = ({ plugin, installedPlugins, fetchPlugins, activePlugins }: PluginCardProps) => {
+const Plugin = ({ plugin }: PluginCardProps) => {
 
-    const formatNumber = (num: number): string => {
-        if (num >= 1000000) {
-            return (num / 1000000).toFixed(1) + 'M+';
-        }
-        if (num >= 1000) {
-            return (num / 1000).toFixed(1) + 'K+';
-        }
-        return num.toString();
-    };
+    const { data: sitePlugins, refetch: fetchSitePlugins } = useQuery(getSitePluginsQueryOptions())
 
-    const formatDate = (dateString: string): string => {
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString();
-        } catch {
-            return dateString;
-        }
-    };
-
-    const formatRating = (rating: number): string => {
-        const validRating = Math.min(Math.max(rating, 0), 5);
-        return validRating.toFixed(1);
-    };
-
-    const { installPlugin, isInstalling } = useManagePlugins();
+    const installedPlugins = sitePlugins?.plugins || {};
+    const activePlugins = sitePlugins?.active_plugins || [];
 
     const pluginKey = useMemo(() => {
         return Object.keys(installedPlugins).find((pluginPath) => {
@@ -49,73 +29,75 @@ const Plugin = ({ plugin, installedPlugins, fetchPlugins, activePlugins }: Plugi
         }) || '';
     }, [installedPlugins]);
 
-    const [isInstalled, setIsInstalled] = useState(false);
+    const { data: activateUrl, refetch: fetchActivateUrl } = useQuery(getPluginActivateUrlQueryOptions(pluginKey));
 
-    useEffect(() => {
-        if (installedPlugins) {
-            setIsInstalled(
-                Object.keys(installedPlugins).some((pluginPath) => {
-                    const pluginDir = pluginPath.split('/')[0];
-                    return pluginDir === plugin.slug;
-                })
-            );
+    const isInstalled = useMemo(() => {
+        return Object.keys(installedPlugins).some((pluginPath) => {
+            return pluginPath === pluginKey;
+        });
+    }, [installedPlugins, pluginKey]);
 
-        } else {
-            setIsInstalled(false);
-        }
-    }, [installedPlugins]);
-
-    const handleInstall = async () => {
-        try {
-            await installPlugin(plugin);
-            setIsInstalled(true);
-            await fetchPlugins();
-        } catch (error) {
-            console.error('Failed to install plugin:', error);
-            // You might want to show an error message to the user here
-        }
-    }
-    const [isActive, setIsActive] = useState(false);
-
-    useEffect(() => {
-        if (activePlugins && activePlugins.length > 0) {
-            setIsActive(
-                activePlugins.some((activePlugin) => {
-                    return activePlugin === pluginKey;
-                })
-            );
-        } else {
-            setIsActive(false);
-        }
-    }, [activePlugins]);
+    const isActive = useMemo(() => {
+        return activePlugins.some((activePlugin) => {
+            return activePlugin === pluginKey;
+        });
+    }, [activePlugins, pluginKey]);
 
     const [isActivating, setIsActivating] = useState(false);
-    const { getActivateUrl } = useActivateUrl();
 
+    const installMutation = useMutation({
+        ...installPluginMutationOptions(),
+        onSuccess: () => {
+            fetchSitePlugins();
+            fetchActivateUrl();
+        }
+    });
+    
     const handleActivate = async () => {
         setIsActivating(true);
-        try {
-            const activateUrl = await getActivateUrl(pluginKey);
-            window.location.href = activateUrl;
-        } catch (error) {
-            console.error('Failed to activate plugin:', error);
-        }
+        window.location.href = activateUrl || '';
     }
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
     return (
-        <div className="ploogin-card">
-            <div className="ploogin-card__header">
-                {plugin.icon_src && (
-                    <img 
-                        src={plugin.icon_src} 
-                        alt={plugin.name}
-                        className="ploogin-card__icon"
-                    />
-                )}
-                <div className="ploogin-card__header-main">
-                    <div className="ploogin-card__title">
-                        <h3>{decodeEntities(plugin.name)}</h3>
-                        <span className="ploogin-card__author">
+        <>
+            <div className="ploogin-card">
+                <div className="ploogin-card__header">
+                    {plugin.icon_src && (
+                        <Button
+                            variant="link"
+                            onClick={() => setIsModalOpen(true)}
+                        >
+                            <img
+                                src={plugin.icon_src} 
+                                alt={plugin.name}
+                                className="ploogin-card__icon"
+                            />
+                        </Button>
+                    )}
+                    <div className="ploogin-card__header-main">
+                        <div className="ploogin-card__title">
+                            <h3>
+                                <Button
+                                    variant="link"
+                                    onClick={() => setIsModalOpen(true)}
+                                    style={{ padding: 0, fontWeight: 'inherit', fontSize: 'inherit', textDecoration: 'none', color: 'accent' }}
+                                >
+                                    {decodeEntities(plugin.name)}
+                                </Button>
+                            </h3>
+                        </div>
+
+                        <div className="ploogin-card__description">
+                            {decodeEntities(plugin.short_description)}
+                        </div>
+
+                        <p className="ploogin-card__author">
                             {__('By', 'ploogins-ai-assistant')}{' '}
                             {plugin.author_profile ? (
                                 <a href={plugin.author_profile} target="_blank" rel="noopener noreferrer">
@@ -124,46 +106,50 @@ const Plugin = ({ plugin, installedPlugins, fetchPlugins, activePlugins }: Plugi
                             ) : (
                                 decodeEntities(plugin.author)
                             )}
-                        </span>
+                        </p>
                     </div>
-                    <div className="ploogin-card__description">
-                        {decodeEntities(plugin.short_description)}
+                    <div className="ploogin-card__header-actions">
+                        {
+                            isInstalled ? (
+                                <Button variant={!isActive ? 'primary' : 'secondary'} disabled={isActivating || isActive} isPressed={isActivating || isActive} isBusy={isActivating} onClick={handleActivate}>
+                                    {isActive ? __('Active', 'ploogins-ai-assistant') : __('Activate', 'ploogins-ai-assistant')}
+                                </Button>
+                            ) : (
+                                <Button variant="secondary" disabled={installMutation.isPending} isPressed={installMutation.isPending} isBusy={installMutation.isPending} onClick={() => installMutation.mutate(plugin.slug)}>
+                                    {__('Install Now', 'ploogins-ai-assistant')}
+                                </Button>
+                            )
+                        }
+                        <Button variant="tertiary" size="compact" onClick={() => setIsModalOpen(true)}>
+                            {__('More Details', 'ploogins-ai-assistant')}
+                        </Button>
                     </div>
                 </div>
-                <div className="ploogin-card__header-actions">
-                    {
-                        isInstalled ? (
-                            <Button variant={!isActive ? 'primary' : 'secondary'} disabled={isActivating || isActive} isPressed={isActivating || isActive} isBusy={isActivating} onClick={handleActivate}>
-                                {isActive ? __('Active') : __('Activate')}
-                            </Button>
-                        ) : (
-                            <Button variant="secondary" disabled={isInstalling} isPressed={isInstalling} isBusy={isInstalling} onClick={handleInstall}>
-                                {__('Install Now')}
-                            </Button>
-                        )
-                    }
-                    <Button variant="tertiary" size="compact">
-                        {__('More Details', 'ploogins-ai-assistant')}
-                    </Button>
-                </div>
-            </div>
-            <div className="ploogin-card__footer">
-                <div className="ploogin-card__footer-meta">
-                    <div className="ploogin-card__rating">
-                        <span className="dashicons dashicons-star-filled"></span>
-                        {formatRating(plugin.rating)} ({formatNumber(plugin.num_ratings)})
-                    </div>
-                    <div className="ploogin-card__installs">
-                        {formatNumber(plugin.active_installs)} {__('Active Installations', 'ploogins-ai-assistant')}
-                    </div>
-                    {plugin.last_updated && (
-                        <div className="ploogin-card__updated">
-                            <strong>{__('Last Updated', 'ploogins-ai-assistant')}:</strong> {formatDate(plugin.last_updated)}
+                <div className="ploogin-card__footer">
+                    <div className="ploogin-card__footer-meta">
+
+                        <div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'start', gap: '0.5rem' }}>
+                                <RatingStars rating={plugin.rating} />
+                                <span className="ploogin-card__rating-count">({formatNumber(plugin.num_ratings)})</span>
+                            </div>
+
+                            <div className="ploogin-card__installs">
+                                {formatNumber(plugin.active_installs)} {__('Active Installations', 'ploogins-ai-assistant')}
+                            </div>
                         </div>
-                    )}
+
+                        {plugin.last_updated && (
+                            <div style={{ display: 'flex', alignItems: 'start', justifyContent: 'end', gap: '0.5rem' }}>
+                                <strong>{__('Last Updated', 'ploogins-ai-assistant')}:</strong>  {formatDateAgo(plugin.last_updated)}
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <PluginModal plugin={plugin} isOpen={isModalOpen} closeModal={closeModal} />
+        </>
     );
 };
 

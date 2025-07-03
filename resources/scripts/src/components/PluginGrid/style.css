@@ -2,10 +2,9 @@
     display: grid;
     grid-template-columns: repeat(1, 1fr);
     gap: 20px;
-    padding: 20px 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 968px) {
     .ploogin-cards-grid {
         grid-template-columns: repeat(2, 1fr);
     }
@@ -17,7 +16,7 @@
     }
 }
 
-@media (min-width: 1920px) {
+@media (min-width: 2048px) {
     .ploogin-cards-grid {
         grid-template-columns: repeat(4, 1fr);
     }

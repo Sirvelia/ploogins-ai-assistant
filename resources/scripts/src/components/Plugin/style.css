@@ -112,10 +112,9 @@
 }
 
 .ploogin-card__footer-meta {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
 }
 
 .ploogin-card__rating {

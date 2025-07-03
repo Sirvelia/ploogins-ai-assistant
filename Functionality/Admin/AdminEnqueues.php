@@ -1,6 +1,6 @@
 <?php
 
-namespace PlooginsPlugin\Functionality\Admin;
+namespace Ploogins\Functionality\Admin;
 
 class AdminEnqueues
 {
@@ -18,11 +18,22 @@ class AdminEnqueues
 
     public function enqueue_admin_scripts()
     {
+        // Verify user has admin capabilities
+        if (!current_user_can('manage_options')) {
+            return;
+        }
 
         $current_page = isset($_GET['page']) ? sanitize_text_field(wp_unslash($_GET['page'])) : '';
 
-        if (is_admin() && $current_page === 'ploogins-install') {
-            wp_enqueue_script('updates');
+        $allowed_pages = [
+            'ploogins',
+            'ploogins-install',
+            'ploogins-recommend',
+            'ploogins-history',
+            'ploogins-settings',
+        ];
+
+        if (is_admin() && in_array($current_page, $allowed_pages, true)) {
             wp_enqueue_style('wp-components');
             wp_enqueue_style($this->plugin_name, ploogins_asset('app.css'), [], $this->plugin_version);
 
@@ -30,8 +41,10 @@ class AdminEnqueues
             
             wp_add_inline_script($this->plugin_name, 'const plooginsData = ' . wp_json_encode([
                 'ajax_url' => admin_url('admin-ajax.php'),
+                'wp_rest_url' => get_rest_url(),
                 'wp_ploogins_api_url' => get_rest_url(null, 'ploogins/v1'),
-                'ploogins_public_api_url' => 'https://api.ploogins.com/v1/public/search/',
+                'ploogins_public_api_url' => 'https://api.ploogins.com/v1/public/',
+                'locale' => get_locale(),
                 'nonce' => wp_create_nonce('wp_rest')
             ]) . ';');
         }

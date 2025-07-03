@@ -5,7 +5,7 @@
  * Plugin Name:       Ploogins - AI Assistant
  * Plugin URI:        https://ploogins.com/
  * Description:       AI Assistant
- * Version:           1.0.1
+ * Version:           1.2.0
  * Author:            Ploogins
  * License:           GPL-3.0+
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
@@ -19,7 +19,7 @@ if (!defined('WPINC')) {
 
 // PLUGIN CONSTANTS
 define('PLOOGINSPLUGIN_NAME', 'ploogins-ai-assistant');
-define('PLOOGINSPLUGIN_VERSION', '1.0.1');
+define('PLOOGINSPLUGIN_VERSION', '1.2.0');
 define('PLOOGINSPLUGIN_PATH', plugin_dir_path(__FILE__));
 define('PLOOGINSPLUGIN_BASENAME', plugin_basename(__FILE__));
 define('PLOOGINSPLUGIN_URL', plugin_dir_url(__FILE__));
@@ -32,9 +32,9 @@ if (file_exists(PLOOGINSPLUGIN_PATH . 'vendor/autoload.php')) {
 }
 
 // LYFECYCLE
-register_activation_hook(__FILE__, [PlooginsPlugin\Includes\Lyfecycle::class, 'activate']);
-register_deactivation_hook(__FILE__, [PlooginsPlugin\Includes\Lyfecycle::class, 'deactivate']);
-register_uninstall_hook(__FILE__, [PlooginsPlugin\Includes\Lyfecycle::class, 'uninstall']);
+register_activation_hook(__FILE__, [Ploogins\Includes\Lyfecycle::class, 'activate']);
+register_deactivation_hook(__FILE__, [Ploogins\Includes\Lyfecycle::class, 'deactivate']);
+register_uninstall_hook(__FILE__, [Ploogins\Includes\Lyfecycle::class, 'uninstall']);
 
 // LOAD ALL FILES
-$loader = new PlooginsPlugin\Includes\Loader();
+$loader = new Ploogins\Includes\Loader();

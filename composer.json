@@ -12,7 +12,7 @@
 			"Utils/utils.php"
 		],
 		"psr-4": {
-			"PlooginsPlugin\\": ""
+			"Ploogins\\": ""
 		}
 	},
 	"description": "An amazing plugin made with PLUBO",

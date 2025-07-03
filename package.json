@@ -42,7 +42,7 @@
 		"start": "wp-scripts start",
 		"translate": "yarn translate:pot && yarn translate:js",
 		"translate:js": "wp i18n make-json ./languages --pretty-print",
-		"translate:pot": "wp i18n make-pot . ./languages/plugin-placeholder.pot --ignore-domain --include=\"react,resources\""
+		"translate:pot": "wp i18n make-pot . ./languages/ploogins.pot --ignore-domain --include=\"react,resources\""
 	},
 	"version": "0.4.5",
 	"volta": {
@@ -50,8 +50,10 @@
 		"yarn": "1.22.22"
 	},
 	"dependencies": {
+		"@tanstack/react-query": "^5.80.7",
 		"@wordpress/api-fetch": "^7.25.0",
 		"@wordpress/components": "^29.11.0",
+		"@wordpress/dataviews": "^4.21.0",
 		"@wordpress/dom-ready": "^4.25.0",
 		"@wordpress/html-entities": "^4.25.0",
 		"@wordpress/i18n": "^5.25.0",

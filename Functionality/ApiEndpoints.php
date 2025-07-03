@@ -1,11 +1,11 @@
 <?php
 
-namespace PlooginsPlugin\Functionality;
+namespace Ploogins\Functionality;
 
 use PluboRoutes\Endpoint\GetEndpoint;
 use PluboRoutes\Endpoint\PostEndpoint;
-use PluboRoutes\Endpoint\PutEndpoint;
-use PluboRoutes\Endpoint\DeleteEndpoint;
+use Ploogins\Entities\SearchEntry;
+use Ploogins\Components\SearchesTable;
 
 class ApiEndpoints
 {
@@ -32,7 +32,7 @@ class ApiEndpoints
     {
         $endpoints[] = new GetEndpoint(
             $this->namespace,
-            'get-plugins',
+            'site-plugins',
             [$this, 'get_plugins'],
             function() {
                 return current_user_can('manage_options');
@@ -41,8 +41,26 @@ class ApiEndpoints
 
         $endpoints[] = new GetEndpoint(
             $this->namespace,
-            'get-activate-url',
+            'plugin-activate-url',
             [$this, 'get_activate_url'],
+            function () {
+                return current_user_can('manage_options');
+            }
+        );
+
+        $endpoints[] = new PostEndpoint(
+            $this->namespace,
+            'search-entries',
+            [$this, 'add_search_entry'],
+            function () {
+                return current_user_can('manage_options');
+            }
+        );
+
+        $endpoints[] = new GetEndpoint(
+            $this->namespace,
+            'search-entries',
+            [$this, 'get_search_entries'],
             function () {
                 return current_user_can('manage_options');
             }
@@ -77,5 +95,47 @@ class ApiEndpoints
         return new \WP_REST_Response([
             'activate_url' => $activate_url,
         ]);
+    }
+
+    public function add_search_entry($request)
+    {
+
+        $search_intent_id = sanitize_text_field($request->get_param('search_intent_id'));
+        $query = sanitize_text_field($request->get_param('query'));
+        $api_args = $request->get_param('api_args');
+        $plugins = $request->get_param('plugins');
+
+        if (is_array($api_args)) {
+            $api_args = map_deep($api_args, 'sanitize_text_field');
+        } else {
+            $api_args = sanitize_text_field($api_args);
+        }
+
+        if (is_array($plugins)) {
+            $plugins = map_deep($plugins, 'sanitize_text_field');
+        } else {
+            $plugins = sanitize_text_field($plugins);
+        }
+
+        $search_entry = new SearchEntry([
+            'search_intent_id' => $search_intent_id,
+            'query' => $query,
+            'api_args' => $api_args,
+            'plugins' => $plugins,
+        ]);
+        $search_entry->save();
+
+        SearchesTable::reset_search_entries_cache();
+
+        return new \WP_REST_Response([
+            'search_entry' => $search_entry,
+        ]);
+    }
+
+    public function get_search_entries()
+    {
+        $search_entries = SearchesTable::get_search_entries();
+
+        return new \WP_REST_Response($search_entries);
     }
 }
