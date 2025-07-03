@@ -19,7 +19,7 @@ if (!defined('WPINC')) {
 
 // PLUGIN CONSTANTS
 define('PLOOGINSPLUGIN_NAME', 'ploogins-ai-assistant');
-define('PLOOGINSPLUGIN_VERSION', '1.0.0');
+define('PLOOGINSPLUGIN_VERSION', '1.0.1');
 define('PLOOGINSPLUGIN_PATH', plugin_dir_path(__FILE__));
 define('PLOOGINSPLUGIN_BASENAME', plugin_basename(__FILE__));
 define('PLOOGINSPLUGIN_URL', plugin_dir_url(__FILE__));
