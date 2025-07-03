@@ -5,7 +5,7 @@
  * Plugin Name:       Ploogins - AI Assistant
  * Plugin URI:        https://ploogins.com/
  * Description:       AI Assistant
- * Version:           1.2.0
+ * Version:           1.2.1
  * Author:            Ploogins
  * License:           GPL-3.0+
  * License URI:       http://www.gnu.org/licenses/gpl-3.0.txt
@@ -19,7 +19,7 @@ if (!defined('WPINC')) {
 
 // PLUGIN CONSTANTS
 define('PLOOGINSPLUGIN_NAME', 'ploogins-ai-assistant');
-define('PLOOGINSPLUGIN_VERSION', '1.2.0');
+define('PLOOGINSPLUGIN_VERSION', '1.2.1');
 define('PLOOGINSPLUGIN_PATH', plugin_dir_path(__FILE__));
 define('PLOOGINSPLUGIN_BASENAME', plugin_basename(__FILE__));
 define('PLOOGINSPLUGIN_URL', plugin_dir_url(__FILE__));

@@ -19,8 +19,8 @@ const Plugin = ({ plugin }: PluginCardProps) => {
 
     const { data: sitePlugins, refetch: fetchSitePlugins } = useQuery(getSitePluginsQueryOptions())
 
-    const installedPlugins = sitePlugins?.plugins || {};
-    const activePlugins = sitePlugins?.active_plugins || [];
+    const installedPlugins = sitePlugins?.plugins && typeof sitePlugins.plugins === 'object' ? sitePlugins.plugins : {};
+    const activePlugins = Array.isArray(sitePlugins?.active_plugins) ? sitePlugins.active_plugins : [];
 
     const pluginKey = useMemo(() => {
         return Object.keys(installedPlugins).find((pluginPath) => {
