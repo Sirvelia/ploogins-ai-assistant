@@ -4,7 +4,7 @@ Donate link: https://ploogins.com/
 Tags: ai, assistant, plugins, ploogins
 Requires at least: 6.8
 Tested up to: 6.8
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 Requires PHP: 8.0
 License: GPL-3.0+
 License URI: http://www.gnu.org/licenses/gpl-3.0.txt
@@ -30,6 +30,9 @@ Ploogins - AI Assistant helps you manage, install, and activate plugins using AI
 Yes, the core features are free. Some advanced features may require a subscription in the future.
 
 == Changelog ==
+
+= 1.2.2 =
+* Fixed search entries table DB version constant
 
 = 1.2.0 =
 * Added AI Search Settings to change the results while using AI Search subpage.

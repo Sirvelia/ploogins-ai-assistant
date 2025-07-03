@@ -37,7 +37,7 @@ class SearchesTable
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
         dbDelta($sql);
 
-        $db_version = \PLOOGINSPLUGIN_DB_VERSION;
+        $db_version = PLOOGINSPLUGIN_DB_VERSION ?? '1.0.0';
         add_option($table_name . '_db_version', $db_version);
     }
 
